@@ -1,4 +1,4 @@
-安装pnmp install
+安装pnpm install
 
 开发pnpm --filter wu-ji-desktop dev
 
