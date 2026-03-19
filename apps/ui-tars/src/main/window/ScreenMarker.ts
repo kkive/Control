@@ -37,6 +37,14 @@ class ScreenMarker {
     return ScreenMarker.instance;
   }
 
+  private showWithoutFocus(window: BrowserWindow) {
+    if (window.isDestroyed() || window.isVisible()) {
+      return;
+    }
+
+    window.showInactive();
+  }
+
   showScreenWaterFlow() {
     if (this.screenWaterFlow) {
       return;
@@ -215,6 +223,7 @@ class ScreenMarker {
       try {
         this.closeOverlay();
         this.currentOverlay = new BrowserWindow({
+          show: false,
           width: overlay.boxWidth || 300,
           height: overlay.boxHeight || 100,
           transparent: true,
@@ -268,6 +277,7 @@ class ScreenMarker {
       </body>
     </html>
     `);
+          this.showWithoutFocus(this.currentOverlay);
 
           // max 5s close overlay
           setTimeout(() => {
