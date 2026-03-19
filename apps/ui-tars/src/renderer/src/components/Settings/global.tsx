@@ -11,6 +11,7 @@ import {
   Sparkles,
   FileText,
   Settings,
+  Bot,
 } from 'lucide-react';
 import {
   Dialog,
@@ -24,6 +25,7 @@ import { ScrollArea } from '@renderer/components/ui/scroll-area';
 
 import { VLMSettings } from './category/vlm';
 import { ChatSettings } from './category/chat';
+import { FeishuSettings } from './category/feishu';
 import { LocalBrowserSettings } from './category/localBrowser';
 import { ReportSettings } from './category/report';
 import { GeneralSettings } from './category/general';
@@ -70,6 +72,13 @@ export const GlobalSettings = () => {
                 对话设置
               </TabsTrigger>
               <TabsTrigger
+                value="feishu"
+                className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
+              >
+                <Bot strokeWidth={2} />
+                飞书设置
+              </TabsTrigger>
+              <TabsTrigger
                 value="operator"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
@@ -108,6 +117,13 @@ export const GlobalSettings = () => {
               <ChatSettings />
             </TabsContent>
 
+            <TabsContent value="feishu" className="mt-0">
+              <ScrollArea className="h-[calc(80vh-48px)]">
+                <h2 className="text-xl font-semibold mb-3">飞书设置</h2>
+                <Separator className="mb-4" />
+                <FeishuSettings />
+              </ScrollArea>
+            </TabsContent>
             <TabsContent value="operator" className="mt-0 flex-1">
               <ScrollArea className="h-[calc(80vh-48px)]">
                 <h2 className="text-xl font-semibold mb-3">操作电脑设置</h2>

@@ -4,7 +4,12 @@
  */
 import { z } from 'zod';
 
-import { SearchEngineForSettings, VLMProviderV2, Operator } from './types';
+import {
+  SearchEngineForSettings,
+  VLMProviderV2,
+  Operator,
+  FeishuTaskOperator,
+} from './types';
 
 const PresetSourceSchema = z.object({
   type: z.enum(['local', 'remote']),
@@ -32,6 +37,12 @@ export const PresetSchema = z.object({
   // Report Settings
   reportStorageBaseUrl: z.string().url().optional(),
   utioBaseUrl: z.string().url().optional(),
+
+  // Feishu Settings
+  feishuEnabled: z.boolean().optional(),
+  feishuAppId: z.string().optional(),
+  feishuAppSecret: z.string().optional(),
+  feishuTaskOperator: z.nativeEnum(FeishuTaskOperator).optional(),
   presetSource: PresetSourceSchema.optional(),
 });
 

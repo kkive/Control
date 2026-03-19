@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "@computer-use/node-mac-permissions": "2.2.2",
+    "@larksuiteoapi/node-sdk": "^1.59.0",
     "sharp": "0.33.3",
     "jose": "^6.0.11"
   },
