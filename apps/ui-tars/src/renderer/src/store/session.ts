@@ -43,6 +43,7 @@ interface SessionState {
   createSession: (
     name: string,
     meta?: SessionMetaInfo,
+    options?: { skipClearHistory?: boolean },
   ) => Promise<SessionItem | null>;
   getSession: (id: string) => Promise<SessionItem | null>;
   updateSession: (
@@ -50,7 +51,10 @@ interface SessionState {
     updates: Partial<Pick<SessionItem, 'name' | 'meta'>>,
   ) => Promise<SessionItem | null>;
   deleteSession: (id: string) => Promise<boolean>;
-  setActiveSession: (sessionId: string) => Promise<void>;
+  setActiveSession: (
+    sessionId: string,
+    options?: { skipClearHistory?: boolean },
+  ) => Promise<void>;
 }
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -83,9 +87,15 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     }
   },
 
-  createSession: async (name, meta = { operator: Operator.LocalComputer }) => {
+  createSession: async (
+    name,
+    meta = { operator: Operator.LocalComputer },
+    options,
+  ) => {
     try {
-      await api.clearHistory();
+      if (!options?.skipClearHistory) {
+        await api.clearHistory();
+      }
 
       const newSession = await sessionManager.createSession(name, meta);
 
@@ -241,9 +251,11 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     }
   },
 
-  setActiveSession: async (sessionId) => {
+  setActiveSession: async (sessionId, options) => {
     try {
-      await api.clearHistory();
+      if (!options?.skipClearHistory) {
+        await api.clearHistory();
+      }
 
       set({ currentSessionId: sessionId });
       await get().getMessages(sessionId);

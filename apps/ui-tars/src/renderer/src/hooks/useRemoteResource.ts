@@ -15,7 +15,7 @@ interface Settings {
   sessionId: string;
   operator: Operator;
   isFree: boolean;
-  from: 'home' | 'new' | 'history';
+  from: 'home' | 'new' | 'history' | 'feishu';
 }
 
 export type RemoteResourceStatus =

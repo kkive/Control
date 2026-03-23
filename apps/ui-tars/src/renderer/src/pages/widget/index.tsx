@@ -104,7 +104,7 @@ const Widget = () => {
           .join(' ');
 
         return {
-          action: 'Action',
+          action: '操作中...',
           type: item.action_type,
           cost: lastMessage.timing?.cost,
           input: input || undefined,

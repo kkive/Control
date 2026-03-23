@@ -8,6 +8,7 @@ import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron';
 import type { UTIOPayload } from '@ui-tars/utio';
 
 import type { AppState, LocalStore } from '@main/store/types';
+import type { FeishuTaskPayload } from '@main/services/feishu';
 
 export type Channels = '';
 
@@ -49,6 +50,20 @@ const electronHandler = {
     resetPreset: () => ipcRenderer.invoke('setting:resetPreset'),
     onUpdate: (callback: (setting: LocalStore) => void) => {
       ipcRenderer.on('setting-updated', (_, state) => callback(state));
+    },
+  },
+  feishu: {
+    onTaskReceived: (callback: (task: FeishuTaskPayload) => void) => {
+      const subscription = (
+        _event: IpcRendererEvent,
+        task: FeishuTaskPayload,
+      ) => callback(task);
+
+      ipcRenderer.on('feishu:task-received', subscription);
+
+      return () => {
+        ipcRenderer.removeListener('feishu:task-received', subscription);
+      };
     },
   },
 };

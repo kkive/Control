@@ -26,6 +26,7 @@ import { UTIOService } from './services/utio';
 import { store } from './store/create';
 import { SettingStore } from './store/setting';
 import { createTray } from './tray';
+import { FeishuService } from './services/feishu';
 import { registerSettingsHandlers } from './services/settings';
 import { sanitizeState } from './utils/sanitizeState';
 import { windowManager } from './services/windowManager';
@@ -97,6 +98,7 @@ const initializeApp = async () => {
 
   logger.info('createMainWindow');
   let mainWindow = createMainWindow();
+  FeishuService.getInstance().initialize();
 
   session.defaultSession.setDisplayMediaRequestHandler(
     (_request, callback) => {
@@ -125,6 +127,7 @@ const initializeApp = async () => {
 
   app.on('before-quit', () => {
     logger.info('before-quit');
+    FeishuService.getInstance().dispose();
     const windows = BrowserWindow.getAllWindows();
     windows.forEach((window) => window.destroy());
   });

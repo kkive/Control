@@ -72,7 +72,9 @@ const LocalOperator = () => {
   useEffect(() => {
     const update = async () => {
       if (state.sessionId) {
-        await setActiveSession(state.sessionId);
+        await setActiveSession(state.sessionId, {
+          skipClearHistory: state.from === 'feishu',
+        });
         setInitId(state.sessionId);
       }
     };

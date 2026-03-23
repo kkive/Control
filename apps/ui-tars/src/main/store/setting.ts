@@ -13,6 +13,7 @@ import {
   SearchEngineForSettings,
   VLMProviderV2,
   Operator,
+  FeishuTaskOperator,
 } from './types';
 import { validatePreset } from './validate';
 import { BrowserWindow } from 'electron';
@@ -30,6 +31,10 @@ export const DEFAULT_SETTING: LocalStore = {
   operator: Operator.LocalComputer,
   reportStorageBaseUrl: '',
   utioBaseUrl: '',
+  feishuEnabled: false,
+  feishuAppId: '',
+  feishuAppSecret: '',
+  feishuTaskOperator: FeishuTaskOperator.LocalComputer,
 };
 
 export class SettingStore {

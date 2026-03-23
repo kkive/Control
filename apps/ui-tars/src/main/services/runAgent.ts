@@ -9,6 +9,7 @@ import { StatusEnum } from '@ui-tars/shared/types';
 import { type ConversationWithSoM } from '@main/shared/types';
 import { GUIAgent, type GUIAgentConfig } from '@ui-tars/sdk';
 import { markClickPosition } from '@main/utils/image';
+import * as env from '@main/env';
 import { UTIOService } from '@main/services/utio';
 import { NutJSElectronOperator } from '../agent/operator';
 import {
@@ -35,6 +36,7 @@ import { FREE_MODEL_BASE_URL } from '../remote/shared';
 import { getAuthHeader } from '../remote/auth';
 import { ProxyClient } from '../remote/proxyClient';
 import { UITarsModelConfig } from '@ui-tars/sdk/core';
+import { shouldShowPredictionMarker } from '@main/utils/predictionMarker';
 
 export const runAgent = async (
   setState: (state: AppState) => void,
@@ -102,10 +104,14 @@ export const runAgent = async (
     );
 
     if (
-      settings.operator === Operator.LocalComputer &&
-      predictionParsed?.length &&
+      predictionParsed &&
       screenshotContext?.size &&
-      !abortController?.signal?.aborted
+      !abortController?.signal?.aborted &&
+      shouldShowPredictionMarker({
+        operator: settings.operator,
+        predictions: predictionParsed,
+        isWindows: env.isWindows,
+      })
     ) {
       showPredictionMarker(predictionParsed, screenshotContext);
     }
