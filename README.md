@@ -2,9 +2,7 @@
 
 Control 是基于 [UI-TARS](https://github.com/bytedance/UI-TARS) 修改而来的项目，用于向原项目致敬。
 
-本项目在原项目许可证基础上进行修改，沿用 `Apache License Version 2.0, January 2004`。
-
-最新版本是0.2.7，现在支持对接飞书机器人，界面已经汉化
+最新版本是0.2.9，现在支持对接个人微信，实现个人微信操作电脑了
 
 
 # 更新日志
@@ -23,11 +21,11 @@ pnpm install
 ### 开发启动
 
 ```bash
-pnpm --filter wu-ji-desktop dev
+pnpm --filter control-desktop dev
 ```
 
 ### 编译构建
 
 ```bash
-pnpm --filter wu-ji-desktop build
+pnpm --filter control-desktop build
 ```
