@@ -9,6 +9,7 @@ import {
   VLMProviderV2,
   Operator,
   FeishuTaskOperator,
+  WeixinTaskOperator,
 } from './types';
 
 const PresetSourceSchema = z.object({
@@ -43,6 +44,8 @@ export const PresetSchema = z.object({
   feishuAppId: z.string().optional(),
   feishuAppSecret: z.string().optional(),
   feishuTaskOperator: z.nativeEnum(FeishuTaskOperator).optional(),
+  weixinEnabled: z.boolean().optional(),
+  weixinTaskOperator: z.nativeEnum(WeixinTaskOperator).optional(),
   presetSource: PresetSourceSchema.optional(),
 });
 

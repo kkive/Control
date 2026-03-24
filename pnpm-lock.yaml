@@ -101,12 +101,18 @@ importers:
       '@larksuiteoapi/node-sdk':
         specifier: ^1.59.0
         version: 1.59.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
+      combined-stream:
+        specifier: ^1.0.8
+        version: 1.0.8
       esbuild-register:
         specifier: '*'
         version: 3.6.0(esbuild@0.25.0)
       jose:
         specifier: ^6.0.11
         version: 6.0.11
+      qrcode.react:
+        specifier: 3.2.0
+        version: 3.2.0(react@19.1.0)
       sharp:
         specifier: 0.33.3
         version: 0.33.3
@@ -9374,6 +9380,11 @@ packages:
     engines: {node: '>=18'}
     deprecated: < 24.15.0 is no longer supported
     hasBin: true
+
+  qrcode.react@3.2.0:
+    resolution: {integrity: sha512-YietHHltOHA4+l5na1srdaMx4sVSOjV9tamHs+mwiLWAMr6QVACRUw1Neax5CptFILcNoITctJY0Ipyn5enQ8g==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
@@ -21194,6 +21205,10 @@ snapshots:
       - supports-color
       - typescript
       - utf-8-validate
+
+  qrcode.react@3.2.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   qs@6.13.0:
     dependencies:

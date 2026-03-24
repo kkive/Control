@@ -28,6 +28,7 @@ import { SettingStore } from './store/setting';
 import { createTray } from './tray';
 import { FeishuService } from './services/feishu';
 import { registerSettingsHandlers } from './services/settings';
+import { WeixinService } from './services/weixin';
 import { sanitizeState } from './utils/sanitizeState';
 import { windowManager } from './services/windowManager';
 import { checkBrowserAvailability } from './services/browserCheck';
@@ -99,6 +100,7 @@ const initializeApp = async () => {
   logger.info('createMainWindow');
   let mainWindow = createMainWindow();
   FeishuService.getInstance().initialize();
+  WeixinService.getInstance().initialize();
 
   session.defaultSession.setDisplayMediaRequestHandler(
     (_request, callback) => {
@@ -128,6 +130,7 @@ const initializeApp = async () => {
   app.on('before-quit', () => {
     logger.info('before-quit');
     FeishuService.getInstance().dispose();
+    WeixinService.getInstance().dispose();
     const windows = BrowserWindow.getAllWindows();
     windows.forEach((window) => window.destroy());
   });

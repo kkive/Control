@@ -1,5 +1,5 @@
 安装pnpm install
 
-开发pnpm --filter wu-ji-desktop dev
+开发pnpm --filter control-desktop dev
 
-编译pnpm --filter wu-ji-desktop build
+编译pnpm --filter control-desktop build

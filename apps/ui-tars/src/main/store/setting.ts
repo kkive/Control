@@ -14,6 +14,7 @@ import {
   VLMProviderV2,
   Operator,
   FeishuTaskOperator,
+  WeixinTaskOperator,
 } from './types';
 import { validatePreset } from './validate';
 import { BrowserWindow } from 'electron';
@@ -35,6 +36,8 @@ export const DEFAULT_SETTING: LocalStore = {
   feishuAppId: '',
   feishuAppSecret: '',
   feishuTaskOperator: FeishuTaskOperator.LocalComputer,
+  weixinEnabled: false,
+  weixinTaskOperator: WeixinTaskOperator.LocalComputer,
 };
 
 export class SettingStore {

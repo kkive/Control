@@ -66,4 +66,9 @@ export enum FeishuTaskOperator {
   LocalBrowser = Operator.LocalBrowser,
 }
 
+export enum WeixinTaskOperator {
+  LocalComputer = Operator.LocalComputer,
+  LocalBrowser = Operator.LocalBrowser,
+}
+
 export type { PresetSource, LocalStore };

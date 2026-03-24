@@ -28,7 +28,13 @@ const keepModules = new Set([
   ...getExternalPkgs(),
   '@computer-use/mac-screen-capture-permissions',
 ]);
-const needSubDependencies = ['@computer-use/node-mac-permissions', 'sharp'];
+const needSubDependencies = [
+  '@computer-use/node-mac-permissions',
+  'sharp',
+  '@larksuiteoapi/node-sdk',
+  'form-data',
+  'combined-stream',
+];
 const ignorePattern = new RegExp(
   `^/node_modules/(?!${[...keepModules].join('|')})`,
 );
@@ -152,7 +158,7 @@ console.log('ignorePattern', ignorePattern);
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: 'WuJi',
+    name: 'Control',
     icon: 'resources/icon',
     extraResource: ['./resources/app-update.yml'],
     asar: {
@@ -166,7 +172,7 @@ const config: ForgeConfig = {
         ? noopAfterCopy
         : setLanguages([...keepLanguages.values()]),
     ],
-    executableName: 'Wu-Ji',
+    executableName: 'Control',
     ...(enableOsxSign
       ? {
           osxSign: {
@@ -198,9 +204,16 @@ const config: ForgeConfig = {
   makers: [
     new MakerZIP({}, ['darwin']),
     new MakerSquirrel({
-      // CamelCase version without spaces
-      name: 'WuJi',
-      setupIcon: 'resources/icon.ico',
+      name: 'Control',
+      usePackageJson: false,
+      noMsi: true,
+      version: pkg.version,
+      title: 'Control',
+      exe: 'Control.exe',
+      setupExe: `Control-${pkg.version} Setup.exe`,
+      authors: 'Control Team',
+      description: 'Control desktop application',
+      copyright: `Copyright (c) ${new Date().getFullYear()} Control Team`,
     }),
     // https://github.com/electron/forge/issues/3712
     new MakerDMG({
@@ -243,3 +256,4 @@ const config: ForgeConfig = {
 };
 
 export default config;
+

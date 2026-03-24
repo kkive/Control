@@ -4,5 +4,5 @@ export interface RouterState {
   operator: Operator;
   sessionId: string;
   isFree?: boolean;
-  from: 'home' | 'new' | 'history' | 'feishu';
+  from: 'home' | 'new' | 'history' | 'feishu' | 'weixin';
 }

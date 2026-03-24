@@ -73,7 +73,8 @@ const LocalOperator = () => {
     const update = async () => {
       if (state.sessionId) {
         await setActiveSession(state.sessionId, {
-          skipClearHistory: state.from === 'feishu',
+          skipClearHistory:
+            state.from === 'feishu' || state.from === 'weixin',
         });
         setInitId(state.sessionId);
       }

@@ -11,25 +11,26 @@ import { dirname } from 'path';
 import { findUpSync } from './findUp';
 
 export const getModuleRoot = (cwd: string, pkgName: string): string => {
-  let moduleEntryPath;
+  const resolvePaths = [cwd || process.cwd()];
+  let moduleEntryPath = '';
+
   try {
     moduleEntryPath = dirname(
       require.resolve(`${pkgName}/package.json`, {
-        paths: [cwd || process.cwd()],
+        paths: resolvePaths,
       }),
     );
-  } catch (error) {
-    moduleEntryPath = dirname(
-      require.resolve(pkgName, {
-        paths: [cwd || process.cwd()],
-      }),
-    );
-    console.warn(
-      'Failed to read package.json:',
-      error,
-      'new_entry_path',
-      moduleEntryPath,
-    );
+  } catch {
+    try {
+      moduleEntryPath = dirname(
+        require.resolve(pkgName, {
+          paths: resolvePaths,
+        }),
+      );
+    } catch (error) {
+      console.warn('Failed to resolve package:', pkgName, error);
+      return '';
+    }
   }
   let pkgPath = findUpSync('package.json', {
     cwd: moduleEntryPath,

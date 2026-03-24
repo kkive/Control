@@ -26,6 +26,7 @@ import { ScrollArea } from '@renderer/components/ui/scroll-area';
 import { VLMSettings } from './category/vlm';
 import { ChatSettings } from './category/chat';
 import { FeishuSettings } from './category/feishu';
+import { WeixinSettings } from './category/weixin';
 import { LocalBrowserSettings } from './category/localBrowser';
 import { ReportSettings } from './category/report';
 import { GeneralSettings } from './category/general';
@@ -62,42 +63,49 @@ export const GlobalSettings = () => {
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
                 <Sparkles strokeWidth={2} />
-                服务商设置
+                模型服务商
               </TabsTrigger>
               <TabsTrigger
                 value="chat"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
                 <MessagesSquare strokeWidth={2} />
-                对话设置
+                对话
               </TabsTrigger>
               <TabsTrigger
                 value="feishu"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
                 <Bot strokeWidth={2} />
-                飞书设置
+                飞书
+              </TabsTrigger>
+              <TabsTrigger
+                value="weixin"
+                className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
+              >
+                <Bot strokeWidth={2} />
+                微信
               </TabsTrigger>
               <TabsTrigger
                 value="operator"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
                 <Cpu strokeWidth={2} />
-                操作电脑设置
+                操作配置
               </TabsTrigger>
               <TabsTrigger
                 value="report"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
                 <FileText strokeWidth={2} />
-                问题反馈
+                反馈
               </TabsTrigger>
               <TabsTrigger
                 value="general"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
               >
                 <Settings strokeWidth={2} />
-                通用设置
+                其他
               </TabsTrigger>
             </TabsList>
           </div>
@@ -105,42 +113,53 @@ export const GlobalSettings = () => {
           <div className="flex-1">
             <TabsContent value="vlm" className="mt-0">
               <ScrollArea className="h-[calc(80vh-48px)]">
-                <h2 className="text-xl font-semibold mb-3">服务商设置</h2>
+                <h2 className="text-xl font-semibold mb-3">Model Settings</h2>
                 <Separator className="mb-4" />
                 <VLMSettings autoSave={true} />
               </ScrollArea>
             </TabsContent>
 
             <TabsContent value="chat" className="mt-0">
-              <h2 className="text-xl font-semibold mb-3">对话设置</h2>
+              <h2 className="text-xl font-semibold mb-3">Chat</h2>
               <Separator className="mb-4" />
               <ChatSettings />
             </TabsContent>
 
             <TabsContent value="feishu" className="mt-0">
               <ScrollArea className="h-[calc(80vh-48px)]">
-                <h2 className="text-xl font-semibold mb-3">飞书设置</h2>
+                <h2 className="text-xl font-semibold mb-3">Feishu</h2>
                 <Separator className="mb-4" />
                 <FeishuSettings />
               </ScrollArea>
             </TabsContent>
+
+            <TabsContent value="weixin" className="mt-0">
+              <ScrollArea className="h-[calc(80vh-48px)]">
+                <h2 className="text-xl font-semibold mb-3">WeChat</h2>
+                <Separator className="mb-4" />
+                <WeixinSettings />
+              </ScrollArea>
+            </TabsContent>
+
             <TabsContent value="operator" className="mt-0 flex-1">
               <ScrollArea className="h-[calc(80vh-48px)]">
-                <h2 className="text-xl font-semibold mb-3">操作电脑设置</h2>
+                <h2 className="text-xl font-semibold mb-3">Computer Control</h2>
                 <Separator className="mb-4" />
                 <h3 className="text-lg font-semibold mt-5 mb-3">
-                  本地浏览器操作
+                  Local Browser
                 </h3>
                 <LocalBrowserSettings />
               </ScrollArea>
             </TabsContent>
+
             <TabsContent value="report" className="mt-0">
-              <h2 className="text-xl font-semibold mb-3">问题反馈</h2>
+              <h2 className="text-xl font-semibold mb-3">Feedback</h2>
               <Separator className="mb-4" />
               <ReportSettings />
             </TabsContent>
+
             <TabsContent value="general" className="mt-0">
-              <h2 className="text-xl font-semibold mb-3">通用设置</h2>
+              <h2 className="text-xl font-semibold mb-3">General</h2>
               <Separator className="mb-4" />
               <GeneralSettings />
             </TabsContent>

@@ -9,6 +9,10 @@ import type { UTIOPayload } from '@ui-tars/utio';
 
 import type { AppState, LocalStore } from '@main/store/types';
 import type { FeishuTaskPayload } from '@main/services/feishu';
+import type {
+  WeixinServiceStatus,
+  WeixinTaskPayload,
+} from '@main/services/weixin';
 
 export type Channels = '';
 
@@ -63,6 +67,38 @@ const electronHandler = {
 
       return () => {
         ipcRenderer.removeListener('feishu:task-received', subscription);
+      };
+    },
+  },
+  weixin: {
+    getStatus: () => ipcRenderer.invoke('weixin:getStatus'),
+    startLogin: () => ipcRenderer.invoke('weixin:startLogin'),
+    deleteAccount: (accountId: string) =>
+      ipcRenderer.invoke('weixin:deleteAccount', accountId),
+    onTaskReceived: (callback: (task: WeixinTaskPayload) => void) => {
+      const subscription = (
+        _event: IpcRendererEvent,
+        task: WeixinTaskPayload,
+      ) => callback(task);
+
+      ipcRenderer.on('weixin:task-received', subscription);
+
+      return () => {
+        ipcRenderer.removeListener('weixin:task-received', subscription);
+      };
+    },
+    onStatusUpdated: (
+      callback: (status: WeixinServiceStatus) => void,
+    ) => {
+      const subscription = (
+        _event: IpcRendererEvent,
+        status: WeixinServiceStatus,
+      ) => callback(status);
+
+      ipcRenderer.on('weixin:status-updated', subscription);
+
+      return () => {
+        ipcRenderer.removeListener('weixin:status-updated', subscription);
       };
     },
   },

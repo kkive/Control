@@ -157,7 +157,7 @@ const Home = () => {
     <div className="w-full h-full flex flex-col">
       <DragArea></DragArea>
       <div className="w-full h-full flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-semibold mt-1 mb-8">欢迎使用 无极AI</h1>
+        <h1 className="text-2xl font-semibold mt-1 mb-8">欢迎使用 Control</h1>
         <Alert className="mb-4 w-[824px]">
           <Info className="h-4 w-4 mt-2" />
           <AlertDescription>
