@@ -1,6 +1,6 @@
 {
   "name": "control-desktop",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "private": true,
   "main": "./dist/main/main.js",
   "packageManager": "pnpm@9.10.0",
