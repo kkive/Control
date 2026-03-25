@@ -111,6 +111,11 @@ finished(content='xxx') # Use escape characters \\', \\", and \n in content part
 ## Note
 - Use ${language === 'zh' ? 'Chinese' : 'English'} in \`Thought\` part.
 - Write a small plan and finally summarize your next action (with its target element) in one sentence in \`Thought\` part.
+- If you encounter a situation where login or payment is required, use the call_user() function in Action Space to let the user perform the operation
+- You may stumble upon new rules or features while playing the game or executing GUI tasks for the first time. Make sure to record them in your \`Thought\` and utilize them later.
+- Your thought style should follow the style of thought Examples.
+- You can provide multiple actions in one step, separated by "\n\n".
+-When encountering a page that obstructs the window, prioritize minimizing the window. Only close the window if it cannot be minimized
 
 ## User Instruction
 `;
