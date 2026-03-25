@@ -9,7 +9,6 @@ import {
   Cpu,
   MessagesSquare,
   Sparkles,
-  FileText,
   Settings,
   Bot,
 } from 'lucide-react';
@@ -28,7 +27,6 @@ import { ChatSettings } from './category/chat';
 import { FeishuSettings } from './category/feishu';
 import { WeixinSettings } from './category/weixin';
 import { LocalBrowserSettings } from './category/localBrowser';
-import { ReportSettings } from './category/report';
 import { GeneralSettings } from './category/general';
 
 interface GlobalSettingsStore {
@@ -93,13 +91,7 @@ export const GlobalSettings = () => {
                 <Cpu strokeWidth={2} />
                 操作配置
               </TabsTrigger>
-              <TabsTrigger
-                value="report"
-                className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
-              >
-                <FileText strokeWidth={2} />
-                反馈
-              </TabsTrigger>
+              {/* Temporarily hide feedback tab; keep implementation for future restore. */}
               <TabsTrigger
                 value="general"
                 className="w-full justify-start gap-2 px-2 py-1.5 mb-2 !shadow-none font-normal data-[state=active]:font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:bg-accent/50"
@@ -152,11 +144,7 @@ export const GlobalSettings = () => {
               </ScrollArea>
             </TabsContent>
 
-            <TabsContent value="report" className="mt-0">
-              <h2 className="text-xl font-semibold mb-3">Feedback</h2>
-              <Separator className="mb-4" />
-              <ReportSettings />
-            </TabsContent>
+            {/* Temporarily hide feedback content; keep implementation for future restore. */}
 
             <TabsContent value="general" className="mt-0">
               <h2 className="text-xl font-semibold mb-3">General</h2>

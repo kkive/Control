@@ -20,21 +20,26 @@ import {
 import { hideMainWindow, showMainWindow } from '../window';
 import { SearchEngine } from '@ui-tars/operator-browser';
 
+const FIXED_MODEL_VERSION = UITarsModelVersion.DOUBAO_1_5_15B;
+
 export const getModelVersion = (
-  provider: VLMProviderV2 | undefined,
+  _provider: VLMProviderV2 | undefined,
 ): UITarsModelVersion => {
-  switch (provider) {
-    case VLMProviderV2.ui_tars_1_5:
-      return UITarsModelVersion.V1_5;
-    case VLMProviderV2.ui_tars_1_0:
-      return UITarsModelVersion.V1_0;
-    case VLMProviderV2.doubao_1_5:
-      return UITarsModelVersion.DOUBAO_1_5_15B;
-    case VLMProviderV2.doubao_1_5_vl:
-      return UITarsModelVersion.DOUBAO_1_5_20B;
-    default:
-      return UITarsModelVersion.V1_0;
-  }
+  return FIXED_MODEL_VERSION;
+
+  // Reserved for future provider selection restore:
+  // switch (_provider) {
+  //   case VLMProviderV2.ui_tars_1_5:
+  //     return UITarsModelVersion.V1_5;
+  //   case VLMProviderV2.ui_tars_1_0:
+  //     return UITarsModelVersion.V1_0;
+  //   case VLMProviderV2.doubao_1_5:
+  //     return UITarsModelVersion.DOUBAO_1_5_15B;
+  //   case VLMProviderV2.doubao_1_5_vl:
+  //     return UITarsModelVersion.DOUBAO_1_5_20B;
+  //   default:
+  //     return UITarsModelVersion.V1_0;
+  // }
 };
 
 export const getSpByModelVersion = (

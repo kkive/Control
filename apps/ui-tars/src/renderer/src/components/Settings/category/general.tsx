@@ -1,30 +1,48 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@renderer/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
 import { api } from '@/renderer/src/api';
 import { toast } from 'sonner';
 
-import { REPO_OWNER, REPO_NAME } from '@main/shared/constants';
-
 export const GeneralSettings = () => {
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [currentVersion, setCurrentVersion] = useState('-');
   const [updateDetail, setUpdateDetail] = useState<{
-    currentVersion: string;
     version: string;
-    link: string | null;
-  } | null>();
+  } | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadVersion = async () => {
+      try {
+        const version = await api.getAppVersion();
+        if (mounted) {
+          setCurrentVersion(version);
+        }
+      } catch (error) {
+        console.error('Failed to get app version:', error);
+      }
+    };
+
+    void loadVersion();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleCheckForUpdates = async () => {
     setUpdateLoading(true);
+    setUpdateDetail(null);
     try {
       const detail = await api.checkForUpdatesDetail();
       console.log('detail', detail);
+      setCurrentVersion(detail.currentVersion);
 
       if (detail.updateInfo) {
         setUpdateDetail({
-          currentVersion: detail.currentVersion,
           version: detail.updateInfo.version,
-          link: `https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/tag/v${detail.updateInfo.version}`,
         });
         return;
       } else if (!detail.isPackaged) {
@@ -45,6 +63,7 @@ export const GeneralSettings = () => {
 
   return (
     <>
+      <div className="text-sm text-gray-500 mb-2">{`当前版本：v${currentVersion}`}</div>
       <Button
         variant="outline"
         type="button"
@@ -58,20 +77,7 @@ export const GeneralSettings = () => {
       </Button>
       {updateDetail?.version && (
         <div className="text-sm text-gray-500">
-          {`${updateDetail.currentVersion} -> ${updateDetail.version}（最新）`}
-        </div>
-      )}
-      {updateDetail?.link && (
-        <div className="text-sm text-gray-500">
-          发布说明：{' '}
-          <a
-            href={updateDetail.link}
-            target="_blank"
-            className="underline"
-            rel="noreferrer"
-          >
-            {updateDetail.link}
-          </a>
+          {`发现新版本：v${updateDetail.version}`}
         </div>
       )}
     </>

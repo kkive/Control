@@ -15,9 +15,7 @@ export class AppUpdater {
   checkReleaseName(releaseInfo: UpdateInfo): boolean {
     const releaseName = releaseInfo?.files?.[0]?.url;
 
-    return Boolean(
-      releaseName && /ui[-.\s]?tars/i.test(releaseName.toLowerCase()),
-    );
+    return Boolean(releaseName && /control/i.test(releaseName.toLowerCase()));
   }
 
   constructor(mainWindow: BrowserWindow) {

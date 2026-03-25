@@ -20,13 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@renderer/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@renderer/components/ui/select';
 import { Input } from '@renderer/components/ui/input';
 import { Switch } from '@renderer/components/ui/switch';
 import { Alert, AlertDescription } from '@renderer/components/ui/alert';
@@ -35,10 +28,10 @@ import { cn } from '@renderer/utils';
 import { PresetImport, PresetBanner } from './preset';
 import { api } from '@/renderer/src/api';
 
+const FIXED_VLM_PROVIDER = VLMProviderV2.doubao_1_5;
+
 const formSchema = z.object({
-  vlmProvider: z.nativeEnum(VLMProviderV2, {
-    message: '请选择 VLM 提供商以提升分辨率',
-  }),
+  vlmProvider: z.literal(FIXED_VLM_PROVIDER),
   vlmBaseUrl: z.string().url(),
   vlmApiKey: z.string().min(1),
   vlmModelName: z.string().min(1),
@@ -75,7 +68,7 @@ export function VLMSettings({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      vlmProvider: undefined,
+      vlmProvider: FIXED_VLM_PROVIDER,
       vlmBaseUrl: '',
       vlmApiKey: '',
       vlmModelName: '',
@@ -85,7 +78,7 @@ export function VLMSettings({
   useEffect(() => {
     if (Object.keys(settings).length) {
       form.reset({
-        vlmProvider: settings.vlmProvider,
+        vlmProvider: FIXED_VLM_PROVIDER,
         vlmBaseUrl: settings.vlmBaseUrl,
         vlmApiKey: settings.vlmApiKey,
         vlmModelName: settings.vlmModelName,
@@ -94,14 +87,9 @@ export function VLMSettings({
     }
   }, [settings, form]);
 
-  const [newProvider, newBaseUrl, newApiKey, newModelName, newUseResponsesApi] =
-    form.watch([
-      'vlmProvider',
-      'vlmBaseUrl',
-      'vlmApiKey',
-      'vlmModelName',
-      'useResponsesApi',
-    ]);
+  const [newBaseUrl, newApiKey, newModelName, newUseResponsesApi] = form.watch(
+    ['vlmBaseUrl', 'vlmApiKey', 'vlmModelName', 'useResponsesApi'],
+  );
 
   useEffect(() => {
     if (!autoSave) {
@@ -115,7 +103,6 @@ export function VLMSettings({
       return;
     }
     if (
-      newProvider === undefined &&
       newBaseUrl === '' &&
       newApiKey === '' &&
       newModelName === ''
@@ -124,8 +111,11 @@ export function VLMSettings({
     }
 
     const validAndSave = async () => {
-      if (newProvider !== settings.vlmProvider) {
-        updateSetting({ ...settings, vlmProvider: newProvider });
+      if (settings.vlmProvider !== FIXED_VLM_PROVIDER) {
+        updateSetting({
+          ...settings,
+          vlmProvider: FIXED_VLM_PROVIDER,
+        });
       }
 
       const isUrlValid = await form.trigger('vlmBaseUrl');
@@ -158,7 +148,6 @@ export function VLMSettings({
     validAndSave();
   }, [
     autoSave,
-    newProvider,
     newBaseUrl,
     newApiKey,
     newModelName,
@@ -169,12 +158,13 @@ export function VLMSettings({
     isRemoteAutoUpdatedPreset,
   ]);
 
-  const handlePresetModal = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setPresetModalOpen(true);
-  };
+  // Reserved for future preset import entry restore:
+  // const handlePresetModal = async (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //
+  //   setPresetModalOpen(true);
+  // };
 
   const handleUpdatePreset = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -243,7 +233,11 @@ export function VLMSettings({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log('onSubmit', values);
 
-    updateSetting({ ...settings, ...values });
+    updateSetting({
+      ...settings,
+      ...values,
+      vlmProvider: FIXED_VLM_PROVIDER,
+    });
     toast.success('设置保存成功');
   };
 
@@ -272,11 +266,13 @@ export function VLMSettings({
     <>
       <Form {...form}>
         <form className={cn('space-y-8 px-[1px]', className)}>
+          {/* Temporarily hide preset import entry; keep for future restore.
           {!isRemoteAutoUpdatedPreset && (
             <Button type="button" variant="outline" onClick={handlePresetModal}>
               导入预设
             </Button>
           )}
+          */}
           {isRemoteAutoUpdatedPreset && (
             <PresetBanner
               url={settings.presetSource?.url}
@@ -286,7 +282,18 @@ export function VLMSettings({
             />
           )}
 
-          {/* VLM 提供商 */}
+          {/* VLM 提供商已暂时固定，保留旧的下拉选择逻辑用于后续恢复 */}
+          <FormItem>
+            <FormLabel>VLM 提供商</FormLabel>
+            <FormControl>
+              <Input
+                className="bg-white"
+                value={FIXED_VLM_PROVIDER}
+                disabled
+              />
+            </FormControl>
+          </FormItem>
+          {/*
           <FormField
             control={form.control}
             name="vlmProvider"
@@ -315,6 +322,7 @@ export function VLMSettings({
               );
             }}
           />
+          */}
           {/* VLM 基础 URL */}
           <FormField
             control={form.control}

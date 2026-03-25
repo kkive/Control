@@ -3,3 +3,5 @@
 开发pnpm --filter control-desktop dev
 
 编译pnpm --filter control-desktop build
+
+更新pnpm --filter control-desktop publish:win32

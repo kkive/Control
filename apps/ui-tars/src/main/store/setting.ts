@@ -19,9 +19,13 @@ import {
 import { validatePreset } from './validate';
 import { BrowserWindow } from 'electron';
 
+const FIXED_VLM_PROVIDER = VLMProviderV2.doubao_1_5;
+
 export const DEFAULT_SETTING: LocalStore = {
   language: 'en',
-  vlmProvider: (env.vlmProvider as VLMProviderV2) || '',
+  vlmProvider: FIXED_VLM_PROVIDER,
+  // Reserved for future provider selection restore:
+  // vlmProvider: (env.vlmProvider as VLMProviderV2) || '',
   vlmBaseUrl: env.vlmBaseUrl || '',
   vlmApiKey: env.vlmApiKey || '',
   vlmModelName: env.vlmModelName || '',
@@ -67,14 +71,24 @@ export class SettingStore {
     key: K,
     value: LocalStore[K],
   ): void {
+    if (key === 'vlmProvider') {
+      SettingStore.getInstance().set('vlmProvider', FIXED_VLM_PROVIDER);
+      return;
+    }
     SettingStore.getInstance().set(key, value);
   }
 
   public static setStore(state: LocalStore): void {
-    SettingStore.getInstance().set(state);
+    SettingStore.getInstance().set({
+      ...state,
+      vlmProvider: FIXED_VLM_PROVIDER,
+    });
   }
 
   public static get<K extends keyof LocalStore>(key: K): LocalStore[K] {
+    if (key === 'vlmProvider') {
+      return FIXED_VLM_PROVIDER as LocalStore[K];
+    }
     return SettingStore.getInstance().get(key);
   }
 
@@ -83,7 +97,15 @@ export class SettingStore {
   }
 
   public static getStore(): LocalStore {
-    return SettingStore.getInstance().store;
+    const store = SettingStore.getInstance().store;
+    if (store.vlmProvider !== FIXED_VLM_PROVIDER) {
+      SettingStore.getInstance().set('vlmProvider', FIXED_VLM_PROVIDER);
+      return {
+        ...store,
+        vlmProvider: FIXED_VLM_PROVIDER,
+      };
+    }
+    return store;
   }
 
   public static clear(): void {

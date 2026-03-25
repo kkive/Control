@@ -14,6 +14,9 @@ export const windowRoute = t.router({
   showMainWindow: t.procedure.input<void>().handle(async () => {
     showWindow();
   }),
+  getAppVersion: t.procedure.input<void>().handle(async () => {
+    return app.getVersion();
+  }),
   checkForUpdatesDetail: t.procedure.input<void>().handle(async () => {
     if (appUpdater) {
       logger.info('checkForUpdatesDetail');

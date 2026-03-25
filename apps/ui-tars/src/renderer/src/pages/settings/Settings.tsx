@@ -41,7 +41,6 @@ import { PresetBanner } from './PresetBanner';
 import googleIcon from '@resources/icons/google-color.svg?url';
 import bingIcon from '@resources/icons/bing-color.svg?url';
 import baiduIcon from '@resources/icons/baidu-color.svg?url';
-import { REPO_OWNER, REPO_NAME } from '@main/shared/constants';
 
 // 定义表单验证 schema
 const formSchema = z.object({
@@ -62,7 +61,7 @@ const formSchema = z.object({
 const SECTIONS = {
   vlm: 'VLM Settings',
   chat: 'Chat Settings',
-  report: 'Report Settings',
+  // report: 'Report Settings',
   general: 'General',
 } as const;
 
@@ -74,23 +73,43 @@ export default function Settings() {
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [currentVersion, setCurrentVersion] = useState('-');
   const [updateDetail, setUpdateDetail] = useState<{
-    currentVersion: string;
     version: string;
-    link: string | null;
-  } | null>();
+  } | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadVersion = async () => {
+      try {
+        const version = await api.getAppVersion();
+        if (mounted) {
+          setCurrentVersion(version);
+        }
+      } catch (error) {
+        console.error('Failed to get app version:', error);
+      }
+    };
+
+    void loadVersion();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleCheckForUpdates = async () => {
     setUpdateLoading(true);
+    setUpdateDetail(null);
     try {
       const detail = await api.checkForUpdatesDetail();
       console.log('detail', detail);
+      setCurrentVersion(detail.currentVersion);
 
       if (detail.updateInfo) {
         setUpdateDetail({
-          currentVersion: detail.currentVersion,
           version: detail.updateInfo.version,
-          link: `https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/tag/v${detail.updateInfo.version}`,
         });
         return;
       } else if (!detail.isPackaged) {
@@ -183,12 +202,13 @@ export default function Settings() {
     // await api.closeSettingsWindow();
   };
 
-  const handlePresetModal = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setPresetModalOpen(true);
-  };
+  // Reserved for future preset import entry restore:
+  // const handlePresetModal = async (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //
+  //   setPresetModalOpen(true);
+  // };
 
   const handleUpdatePreset = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -262,6 +282,7 @@ export default function Settings() {
                 className="space-y-6 ml-1 mr-4"
               >
                 <h2 className="text-lg font-medium">{SECTIONS.vlm}</h2>
+                {/* Temporarily hide preset import entry; keep for future restore.
                 {!isRemoteAutoUpdatedPreset && (
                   <Button
                     type="button"
@@ -271,6 +292,7 @@ export default function Settings() {
                     Import Preset Config
                   </Button>
                 )}
+                */}
                 {isRemoteAutoUpdatedPreset && (
                   <PresetBanner
                     url={settings.presetSource?.url}
@@ -497,6 +519,7 @@ export default function Settings() {
                   )}
                 />
               </div>
+              {/* Temporarily hide feedback/report section; keep implementation for future restore.
               <div
                 id="report"
                 ref={(el) => {
@@ -505,7 +528,6 @@ export default function Settings() {
                 className="space-y-6 pt-6 ml-1 mr-4"
               >
                 <h2 className="text-lg font-medium">{SECTIONS.report}</h2>
-                {/* Report Settings Fields */}
                 <FormField
                   control={form.control}
                   name="reportStorageBaseUrl"
@@ -523,7 +545,6 @@ export default function Settings() {
                     </FormItem>
                   )}
                 />
-                {/* UTIO Base URL */}
                 <FormField
                   control={form.control}
                   name="utioBaseUrl"
@@ -543,6 +564,7 @@ export default function Settings() {
                 />
                 <div className="h-50"></div>
               </div>
+              */}
 
               <div
                 id="general"
@@ -552,6 +574,7 @@ export default function Settings() {
                 className="space-y-6 ml-1 mr-4"
               >
                 <h2 className="text-lg font-medium">{SECTIONS.general}</h2>
+                <div className="text-sm text-gray-500">{`Current version: v${currentVersion}`}</div>
                 <Button
                   variant="outline"
                   type="button"
@@ -565,20 +588,7 @@ export default function Settings() {
                 </Button>
                 {updateDetail?.version && (
                   <div className="text-sm text-gray-500">
-                    {`${updateDetail.currentVersion} -> ${updateDetail.version}(latest)`}
-                  </div>
-                )}
-                {updateDetail?.link && (
-                  <div className="text-sm text-gray-500">
-                    Release Notes:{' '}
-                    <a
-                      href={updateDetail.link}
-                      target="_blank"
-                      className="underline"
-                      rel="noreferrer"
-                    >
-                      {updateDetail.link}
-                    </a>
+                    {`New version available: v${updateDetail.version}`}
                   </div>
                 )}
                 <div className="h-50" />
