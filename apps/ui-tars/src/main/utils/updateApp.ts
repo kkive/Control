@@ -91,17 +91,18 @@ export class AppUpdater {
 
     try {
       const update = await this.autoUpdater.checkForUpdates();
-      if (
+      const hasAvailableUpdate =
         update?.isUpdateAvailable &&
         update?.updateInfo &&
-        this.checkReleaseName(update.updateInfo)
-      ) {
+        this.checkReleaseName(update.updateInfo);
+
+      if (hasAvailableUpdate) {
         this.autoUpdater.downloadUpdate();
       }
 
       return {
         currentVersion: this.autoUpdater.currentVersion.toString(),
-        updateInfo: update?.updateInfo,
+        updateInfo: hasAvailableUpdate ? update?.updateInfo : null,
       };
     } catch (error) {
       logger.error('Failed to check for update:', error);

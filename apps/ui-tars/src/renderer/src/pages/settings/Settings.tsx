@@ -15,6 +15,16 @@ import { SearchEngineForSettings, VLMProviderV2 } from '@main/store/types';
 import { useSetting } from '@renderer/hooks/useSetting';
 import { Button } from '@renderer/components/ui/button';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@renderer/components/ui/alert-dialog';
+import {
   Form,
   FormControl,
   FormField,
@@ -65,6 +75,8 @@ const SECTIONS = {
   general: 'General',
 } as const;
 
+const APP_DOWNLOAD_URL = 'https://tomato.wutanggroup.com/';
+
 export default function Settings() {
   const { settings, updateSetting, clearSetting, updatePresetFromRemote } =
     useSetting();
@@ -77,6 +89,7 @@ export default function Settings() {
   const [updateDetail, setUpdateDetail] = useState<{
     version: string;
   } | null>(null);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -111,6 +124,7 @@ export default function Settings() {
         setUpdateDetail({
           version: detail.updateInfo.version,
         });
+        setUpdateDialogOpen(true);
         return;
       } else if (!detail.isPackaged) {
         toast.info('Unpackaged version does not support update check!');
@@ -624,6 +638,27 @@ export default function Settings() {
         isOpen={isPresetModalOpen}
         onClose={() => setPresetModalOpen(false)}
       />
+
+      <AlertDialog open={updateDialogOpen} onOpenChange={setUpdateDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>New version available</AlertDialogTitle>
+            <AlertDialogDescription>
+              {`Detected latest version: v${updateDetail?.version ?? '-'}. Click "Download" to install the latest package.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Later</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() =>
+                window.open(APP_DOWNLOAD_URL, '_blank', 'noopener,noreferrer')
+              }
+            >
+              Download
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
