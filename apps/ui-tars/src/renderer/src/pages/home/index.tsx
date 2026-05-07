@@ -221,7 +221,7 @@ const Home = () => {
             <CardHeader className="px-5">
               <CardTitle>Browser Operator</CardTitle>
               <CardDescription>
-                Let the UI-TARS model help you automate browser tasks, from
+                Let Control help you automate browser tasks, from
                 navigating pages to filling out forms.
               </CardDescription>
             </CardHeader>

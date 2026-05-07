@@ -19,7 +19,10 @@ import {
 } from '@renderer/components/ui/alert-dialog';
 import { DropdownMenuItem } from '@renderer/components/ui/dropdown-menu';
 import { ComputerUseUserData } from '@ui-tars/shared/types';
-import { reportHTMLContent } from '@renderer/utils/html';
+import {
+  CONTROL_REPORT_TEMPLATE,
+  reportHTMLContent,
+} from '@renderer/utils/html';
 import { uploadReport } from '@renderer/utils/share';
 import { useStore } from '@renderer/hooks/useStore';
 import { useSetting } from '@renderer/hooks/useSetting';
@@ -68,11 +71,6 @@ export function ShareOptions({ sessionId }: { sessionId: string }) {
         });
       }, SHARE_TIMEOUT);
 
-      const response = await fetch(
-        'https://lf3-static.bytednsdoc.com/obj/eden-cn/eojfrzeh7vhouloj/ai_labs/ui_tars_desktop/share/v011/index.html',
-      );
-      const html = await response.text();
-
       const restUserData =
         sessions.find((item) => item.id === sessionId)?.meta || {};
 
@@ -95,7 +93,9 @@ export function ShareOptions({ sessionId }: { sessionId: string }) {
       console.log('share sessionId', sessionId);
       console.log('share info', userData);
 
-      const htmlContent = reportHTMLContent(html, [userData]);
+      const htmlContent = reportHTMLContent(CONTROL_REPORT_TEMPLATE, [
+        userData,
+      ]);
 
       let uploadSuccess = false;
 
@@ -198,7 +198,7 @@ export function ShareOptions({ sessionId }: { sessionId: string }) {
           <AlertDialogHeader>
             <AlertDialogTitle>分享报告</AlertDialogTitle>
             <AlertDialogDescription>
-              你愿意分享这份报告来帮助我们改进 <b>UI-TARS</b> 吗？这将包含你的
+              你愿意分享这份报告来帮助我们改进 <b>Control</b> 吗？这将包含你的
               屏幕录制和操作记录。
               <br />
               <br />

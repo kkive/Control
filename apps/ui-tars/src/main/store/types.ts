@@ -43,10 +43,10 @@ export enum VlmProvider {
 }
 
 export enum VLMProviderV2 {
-  ui_tars_1_0 = 'Hugging Face for UI-TARS-1.0',
-  ui_tars_1_5 = 'Hugging Face for UI-TARS-1.5',
+  ui_tars_1_0 = 'Hugging Face Vision 1.0',
+  ui_tars_1_5 = 'Hugging Face Vision 1.5',
   doubao_1_5 = 'Doubao',
-  doubao_1_5_vl = 'VolcEngine Ark for Doubao-1.5-thinking-vision-pro',
+  doubao_1_5_vl = 'VolcEngine Ark Vision Pro',
 }
 
 export enum SearchEngineForSettings {

@@ -9,7 +9,7 @@ import { Conversation } from '@ui-tars/shared/types';
 import { api } from '@renderer/api';
 
 export const useScreenRecord = (
-  watermarkText = `© ${new Date().getFullYear()} UI-TARS Desktop`,
+  watermarkText = `© ${new Date().getFullYear()} Control`,
 ) => {
   const DOMURL = window.URL || window.webkitURL || window;
   const [isRecording, setIsRecording] = useState(false);
@@ -188,7 +188,7 @@ export const useScreenRecord = (
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ui-tars-recording-${Date.now()}.mp4`;
+    a.download = `control-recording-${Date.now()}.mp4`;
     a.click();
 
     URL.revokeObjectURL(url);

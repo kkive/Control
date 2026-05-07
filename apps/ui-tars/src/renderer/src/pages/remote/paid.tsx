@@ -284,7 +284,7 @@ const RemoteOperator = () => {
       <NavHeader
         title={state.operator}
         onBack={handleBack}
-        docUrl="https://github.com/bytedance/UI-TARS-desktop/"
+        docUrl="https://github.com/kkive/Control"
       >
         <Button
           size={'sm'}

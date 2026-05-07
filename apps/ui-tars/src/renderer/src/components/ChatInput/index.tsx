@@ -189,7 +189,7 @@ const ChatInput = ({
             </TooltipTrigger>
             <TooltipContent>
               <p className="whitespace-pre-line">
-                send last instructions when you done for ui-tars&apos;s
+                send final instructions when you are done with Control&apos;s
                 &apos;CALL_USER&apos;
               </p>
             </TooltipContent>

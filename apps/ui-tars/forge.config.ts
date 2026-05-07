@@ -159,6 +159,8 @@ console.log('ignorePattern', ignorePattern);
 const config: ForgeConfig = {
   packagerConfig: {
     name: 'Control',
+    appBundleId: 'com.control.desktop',
+    appCategoryType: 'public.app-category.productivity',
     icon: 'resources/icon',
     extraResource: ['./resources/app-update.yml'],
     asar: {

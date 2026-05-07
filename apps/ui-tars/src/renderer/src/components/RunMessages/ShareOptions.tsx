@@ -24,7 +24,10 @@ import {
   AlertDialogTitle,
 } from '@renderer/components/ui/alert-dialog';
 import { ComputerUseUserData, StatusEnum } from '@ui-tars/shared/types';
-import { reportHTMLContent } from '@renderer/utils/html';
+import {
+  CONTROL_REPORT_TEMPLATE,
+  reportHTMLContent,
+} from '@renderer/utils/html';
 import { uploadReport } from '@renderer/utils/share';
 import { useStore } from '@renderer/hooks/useStore';
 import { useSetting } from '@renderer/hooks/useSetting';
@@ -78,11 +81,6 @@ export function ShareOptions() {
       if (type === 'video') {
         // saveRecording();
       } else if (type === 'report') {
-        const response = await fetch(
-          'https://lf3-static.bytednsdoc.com/obj/eden-cn/eojfrzeh7vhouloj/ai_labs/ui_tars_desktop/share/v011/index.html',
-        );
-        const html = await response.text();
-
         const restUserData =
           sessions.find((item) => item.id === currentSessionId)?.meta || {};
 
@@ -100,7 +98,9 @@ export function ShareOptions() {
 
         console.log('restUserData', userData);
 
-        const htmlContent = reportHTMLContent(html, [userData]);
+        const htmlContent = reportHTMLContent(CONTROL_REPORT_TEMPLATE, [
+          userData,
+        ]);
 
         let uploadSuccess = false;
 
@@ -213,7 +213,7 @@ export function ShareOptions() {
             <AlertDialogTitle>Share Report</AlertDialogTitle>
             <AlertDialogDescription>
               📢 Would you like to share your report to help us improve{' '}
-              <b>UI-TARS</b>? This includes your screen recordings and actions.
+              <b>Control</b>? This includes your screen recordings and actions.
               <br />
               <br />
               💡 We encourage you to create a clean and privacy-free desktop
