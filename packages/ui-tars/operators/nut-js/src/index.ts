@@ -41,6 +41,7 @@ export class NutJSOperator extends Operator {
       `right_single(start_box='[x1, y1, x2, y2]')`,
       `drag(start_box='[x1, y1, x2, y2]', end_box='[x3, y3, x4, y4]')`,
       `hotkey(key='')`,
+      `web_search(query='...') # Search the web for tutorials or next-step guidance when stuck.`,
       `type(content='') #If you want to submit your input, use "\\n" at the end of \`content\`.`,
       `scroll(start_box='[x1, y1, x2, y2]', direction='down or up or right or left')`,
       `wait() #Sleep for 5s and take a screenshot to check for any changes.`,
@@ -171,6 +172,13 @@ export class NutJSOperator extends Operator {
       case 'wait':
         logger.info('[NutjsOperator] wait', action_inputs);
         await sleep(5000);
+        break;
+      case 'web_search':
+        logger.info(
+          '[NutjsOperator] web_search',
+          (action_inputs as { query?: string } | undefined)?.query,
+        );
+        await sleep(1000);
         break;
 
       case 'mouse_move':

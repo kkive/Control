@@ -60,6 +60,7 @@ export const useRunAgent = () => {
   const run = async (
     value: string,
     history: ConversationWithSoM[],
+    webSearchEnabled: boolean,
     callback: () => void = () => {},
   ) => {
     const operator = settings.operator;
@@ -96,6 +97,7 @@ export const useRunAgent = () => {
 
     await Promise.all([
       api.setInstructions({ instructions: value }),
+      api.setWebSearchEnabled({ enabled: webSearchEnabled }),
       api.setMessages({ messages: [...currentMessages, ...initialMessages] }),
       api.setSessionHistoryMessages({
         messages: sessionHistory,

@@ -69,6 +69,7 @@ export interface ScreenshotResult {
 export type Coords = [number, number] | [];
 export type ActionInputs = Partial<{
   content: string;
+  query: string;
   start_box: string;
   end_box: string;
   key: string;

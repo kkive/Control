@@ -20,7 +20,7 @@ import { Button } from '@renderer/components/ui/button';
 // import { useScreenRecord } from '@renderer/hooks/useScreenRecord';
 import { api } from '@renderer/api';
 
-import { Play, Send, Square, Loader2 } from 'lucide-react';
+import { Play, Send, Square, Loader2, CircleHelp } from 'lucide-react';
 import { Textarea } from '@renderer/components/ui/textarea';
 import { useSession } from '@renderer/hooks/useSession';
 
@@ -49,6 +49,7 @@ const ChatInput = ({
   const { getSession, updateSession, chatMessages } = useSession();
   const { settings, updateSetting } = useSetting();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const running = status === StatusEnum.RUNNING;
 
   useEffect(() => {
@@ -119,7 +120,7 @@ const ChatInput = ({
       },
     });
 
-    run(instructions, history, () => {
+    run(instructions, history, webSearchEnabled, () => {
       setLocalInstructions('');
     });
   };
@@ -230,6 +231,33 @@ const ChatInput = ({
             onKeyDown={handleKeyDown}
           />
           <div className="absolute right-4 bottom-4 flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <Button
+                  type="button"
+                  variant={webSearchEnabled ? 'default' : 'outline'}
+                  size="sm"
+                  className="h-8 rounded-full px-3"
+                  onClick={() => setWebSearchEnabled((prev) => !prev)}
+                  disabled={running || disabled}
+                >
+                  联网
+                  <TooltipTrigger asChild>
+                    <span
+                      className="ml-1 inline-flex items-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <CircleHelp className="h-3.5 w-3.5" />
+                    </span>
+                  </TooltipTrigger>
+                </Button>
+                <TooltipContent>
+                  <p>
+                    在复杂任务开启联网功能，更好用，但是更费token
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             {running && (
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             )}

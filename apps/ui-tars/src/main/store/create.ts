@@ -14,6 +14,7 @@ export const store = createStore<AppState>(
       theme: 'light',
       restUserData: null,
       instructions: '',
+      webSearchEnabled: false,
       status: StatusEnum.INIT,
       sessionHistoryMessages: [],
       messages: [],

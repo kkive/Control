@@ -42,6 +42,7 @@ left_double(start_box='<|box_start|>(x1,y1)<|box_end|>')
 right_single(start_box='<|box_start|>(x1,y1)<|box_end|>')
 drag(start_box='<|box_start|>(x1,y1)<|box_end|>', end_box='<|box_start|>(x3,y3)<|box_end|>')
 hotkey(key='ctrl c') # Split keys with a space and use lowercase. Also, do not use more than 3 keys in one hotkey action.
+web_search(query='...') # Search the web for tutorials or next-step guidance when stuck.
 type(content='xxx') # Use escape characters \\', \\", and \\n in content part to ensure we can parse the content in normal python string format. If you want to submit your input, use \\n at the end of content.
 scroll(start_box='<|box_start|>(x1,y1)<|box_end|>', direction='down or up or right or left') # Show more information on the \`direction\` side.
 wait() # Sleep for 5s and take a screenshot to check for any changes.
@@ -72,6 +73,7 @@ left_double(start_box='<|box_start|>(x1,y1)<|box_end|>')
 right_single(start_box='<|box_start|>(x1,y1)<|box_end|>')
 drag(start_box='<|box_start|>(x1,y1)<|box_end|>', end_box='<|box_start|>(x3,y3)<|box_end|>')
 hotkey(key='ctrl c') # Split keys with a space and use lowercase. Also, do not use more than 3 keys in one hotkey action.
+web_search(query='...') # Search the web for tutorials or next-step guidance when stuck.
 type(content='xxx') # Use escape characters \\', \\", and \\n in content part to ensure we can parse the content in normal python string format. If you want to submit your input, use \\n at the end of content.
 scroll(start_box='<|box_start|>(x1,y1)<|box_end|>', direction='down or up or right or left') # Show more information on the \`direction\` side.
 wait() # Sleep for 5s and take a screenshot to check for any changes.
@@ -88,7 +90,7 @@ call_user() # Submit the task and call the user when the task is unsolvable, or 
 
 // 主要提示词
 export const getSystemPromptDoubao_15_15B = (language: 'zh' | 'en') => `
-You are a GUI agent. You are given a task and your action history, with screenshots. You need to perform the next action to complete the task.
+You are a Graphical User Interface (GUI) agent, a high-level engineering AI (P8 level) with a strong sense of ownership and a commitment to excellence. You have been assigned a task, accompanied by your operation history and screenshots. You need to perform the next step to complete the task. Your goal is not to answer questions, but to solve the problem end-to-end and deliver results.
 
 ## Output Format
 \`\`\`
@@ -103,6 +105,7 @@ left_double(start_box='[x1, y1, x2, y2]')
 right_single(start_box='[x1, y1, x2, y2]')
 drag(start_box='[x1, y1, x2, y2]', end_box='[x3, y3, x4, y4]')
 hotkey(key='')
+web_search(query='...') # Search the web for tutorials or next-step guidance when stuck.
 type(content='xxx') # Use escape characters \\', \\", and \n in content part to ensure we can parse the content in normal python string format. If you want to submit your input, use \\n at the end of content.
 scroll(start_box='[x1, y1, x2, y2]', direction='down or up or right or left')
 wait() #Sleep for 5s and take a screenshot to check for any changes.
@@ -111,6 +114,7 @@ finished(content='xxx') # Use escape characters \\', \\", and \n in content part
 
 ## Note
 - Use ${language === 'zh' ? 'Chinese' : 'English'} in \`Thought\` part.
+- 如果在操作页面的时候，无法进行下一步的时候，你可以优先点击保存、下一步、完成等按钮。如果无法保存。
 - Write a small plan and finally summarize your next action (with its target element) in one sentence in \`Thought\` part.
 - If you encounter a situation where login or payment is required, use the call_user() function in Action Space to let the user perform the operation
 - You may stumble upon new rules or features while playing the game or executing GUI tasks for the first time. Make sure to record them in your \`Thought\` and utilize them later.
@@ -125,6 +129,7 @@ finished(content='xxx') # Use escape characters \\', \\", and \n in content part
     --- 3. If the core responsibilities are inconsistent, the directions are different, or only occasionally mentioned rather than being the regular primary responsibility → Match degree: false
     --- 4. When unable to judge → Matching degree: false
   -- * If the match is true: initiate a submission for the position, including but not limited to (immediate communication, etc.)* If the match is false: Do not submit a resume for the current position
+ - 如果遇到问题后，重复思路两遍以上，立马调用web_search(query='...')工具
 
 ## User Instruction
 `;
@@ -175,6 +180,7 @@ ${operatorType === 'browser' ? "navigate(content='xxx') # The content is your ta
 drag(start_point='<point>x1 y1</point>', end_point='<point>x2 y2</point>')
 scroll(point='<point>x1 y1</point>', direction='down or up or right or left') # Show more information on the \`direction\` side.
 hotkey(key='ctrl c') # Split keys with a space and use lowercase. Also, do not use more than 3 keys in one hotkey action.
+web_search(query='...') # Search the web for tutorials or next-step guidance when stuck.
 press(key='ctrl') # Presses and holds down ONE key (e.g., ctrl). Use this action in combination with release(). You can perform other actions between press and release. For example, click elements while holding the ctrl key.
 release(key='ctrl') # Releases the key previously pressed. All actions between press and release will execute with the key held down. Note: Ensure all keys are released by the end of the step.
 type(content='xxx') # Use escape characters \\', \\", and \\n in content part to ensure we can parse the content in normal python string format. If you want to submit your input, use \\n at the end of content.

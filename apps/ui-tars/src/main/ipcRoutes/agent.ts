@@ -92,6 +92,11 @@ export const agentRoute = t.router({
     .handle(async ({ input }) => {
       store.setState({ instructions: input.instructions });
     }),
+  setWebSearchEnabled: t.procedure
+    .input<{ enabled: boolean }>()
+    .handle(async ({ input }) => {
+      store.setState({ webSearchEnabled: input.enabled });
+    }),
   setMessages: t.procedure
     .input<{ messages: Conversation[] }>()
     .handle(async ({ input }) => {
@@ -109,6 +114,7 @@ export const agentRoute = t.router({
       thinking: false,
       errorMsg: null,
       instructions: '',
+      webSearchEnabled: false,
     });
   }),
 });

@@ -44,7 +44,7 @@ export const runAgent = async (
 ) => {
   logger.info('runAgent');
   const settings = SettingStore.getStore();
-  const { instructions, abortController } = getState();
+  const { instructions, abortController, webSearchEnabled } = getState();
   assert(instructions, 'instructions is required');
 
   const language = settings.language ?? 'en';
@@ -177,6 +177,16 @@ export const runAgent = async (
     model: settings.vlmModelName,
     useResponsesApi: settings.useResponsesApi,
   };
+  if (webSearchEnabled) {
+    Object.assign(
+      modelConfig as UITarsModelConfig & {
+        tools?: Array<{ type: string }>;
+      },
+      {
+        tools: [{ type: 'web_search' }],
+      },
+    );
+  }
   let modelAuthHdrs: Record<string, string> = {};
 
   if (

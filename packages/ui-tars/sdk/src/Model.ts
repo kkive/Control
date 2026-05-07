@@ -40,6 +40,8 @@ type OpenAIChatCompletionCreateParams = Omit<ClientOptions, 'maxRetries'> &
 export interface UITarsModelConfig extends OpenAIChatCompletionCreateParams {
   /** Whether to use OpenAI Response API instead of Chat Completions API */
   useResponsesApi?: boolean;
+  /** Response API tools, e.g. [{ type: 'web_search' }] */
+  tools?: ResponseCreateParamsNonStreaming['tools'];
 }
 
 export interface ThinkingVisionProModelConfig
@@ -205,6 +207,9 @@ export class UITarsModel extends Model {
           top_p,
           stream: false,
           max_output_tokens: max_tokens,
+          ...(this.modelConfig.tools?.length
+            ? { tools: this.modelConfig.tools }
+            : {}),
           ...(responseId && {
             previous_response_id: responseId,
           }),
