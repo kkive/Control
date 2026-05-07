@@ -47,6 +47,9 @@ export const PresetSchema = z.object({
   weixinEnabled: z.boolean().optional(),
   weixinTaskOperator: z.nativeEnum(WeixinTaskOperator).optional(),
   presetSource: PresetSourceSchema.optional(),
+
+  // Analytics Settings
+  analyticsEnabled: z.boolean().optional(),
 });
 
 export type PresetSource = z.infer<typeof PresetSourceSchema>;

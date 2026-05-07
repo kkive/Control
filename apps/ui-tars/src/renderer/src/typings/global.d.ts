@@ -4,10 +4,13 @@
  */
 import { ElectronHandler } from '../../preload/index';
 
-interface Window {
-  electron: ElectronHandler;
-  platform: NodeJS.Platform;
-  zutron: any;
+declare global {
+  interface Window {
+    electron: ElectronHandler;
+    platform: NodeJS.Platform;
+    zutron: any;
+    clarity?: ((command: string, ...args: unknown[]) => void) & { q?: unknown[][] };
+  }
 }
 
 declare module 'react' {

@@ -42,6 +42,7 @@ export const DEFAULT_SETTING: LocalStore = {
   feishuTaskOperator: FeishuTaskOperator.LocalComputer,
   weixinEnabled: false,
   weixinTaskOperator: WeixinTaskOperator.LocalComputer,
+  analyticsEnabled: true,
 };
 
 export class SettingStore {

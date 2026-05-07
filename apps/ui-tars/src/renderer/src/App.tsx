@@ -3,10 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Route, HashRouter, Routes } from 'react-router';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Toaster } from 'sonner';
 
 import { MainLayout } from './layouts/MainLayout';
+import { syncClarityAnalyticsConsent } from './utils/clarity';
+import { useSetting } from './hooks/useSetting';
 
 import './styles/globals.css';
 
@@ -17,9 +19,23 @@ const FreeRemoteOperator = lazy(() => import('./pages/remote/free'));
 
 const Widget = lazy(() => import('./pages/widget'));
 
+function ClarityProvider() {
+  const { settings } = useSetting();
+  const settingsLoaded = Object.keys(settings).length > 0;
+
+  useEffect(() => {
+    if (settingsLoaded) {
+      syncClarityAnalyticsConsent(settings.analyticsEnabled ?? true);
+    }
+  }, [settingsLoaded, settings.analyticsEnabled]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <HashRouter>
+      <ClarityProvider />
       <Suspense
         fallback={
           <div className="loading-container">

@@ -350,7 +350,7 @@ export function VLMSettings({
               <FormItem>
                 <FormLabel>VLM API 密钥</FormLabel>
                 <FormControl>
-                  <div className="relative">
+                  <div className="relative" data-clarity-mask="true">
                     <Input
                       type={showPassword ? 'text' : 'password'}
                       className="bg-white"

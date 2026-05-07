@@ -212,7 +212,7 @@ const ChatInput = ({
   };
 
   return (
-    <div className="px-4 w-full">
+    <div className="px-4 w-full" data-clarity-mask="true">
       <div className="flex flex-col space-y-4">
         <div className="relative w-full">
           <Textarea
