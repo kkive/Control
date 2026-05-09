@@ -21,6 +21,10 @@ import {
 } from './utils';
 import { DEFAULT_FACTORS } from './constants';
 import {
+  isXiaomiProvider,
+  buildXiaomiClientOptions,
+} from './providers';
+import {
   UITarsModelVersion,
   MAX_PIXELS_V1_0,
   MAX_PIXELS_V1_5,
@@ -34,7 +38,7 @@ import type {
 type OpenAIChatCompletionCreateParams = Omit<ClientOptions, 'maxRetries'> &
   Pick<
     ChatCompletionCreateParamsBase,
-    'model' | 'max_tokens' | 'temperature' | 'top_p'
+    'model' | 'max_tokens' | 'max_completion_tokens' | 'temperature' | 'top_p'
   >;
 
 export interface UITarsModelConfig extends OpenAIChatCompletionCreateParams {
@@ -42,6 +46,8 @@ export interface UITarsModelConfig extends OpenAIChatCompletionCreateParams {
   useResponsesApi?: boolean;
   /** Response API tools, e.g. [{ type: 'web_search' }] */
   tools?: ResponseCreateParamsNonStreaming['tools'];
+  /** Explicit provider marker; inferred from baseURL when omitted */
+  provider?: 'openai' | 'xiaomi';
 }
 
 export interface ThinkingVisionProModelConfig
@@ -109,29 +115,54 @@ export class UITarsModel extends Model {
       baseURL,
       apiKey,
       model,
-      max_tokens = uiTarsVersion == UITarsModelVersion.V1_5 ? 65535 : 1000,
+      max_completion_tokens,
+      max_tokens = max_completion_tokens ??
+        (uiTarsVersion == UITarsModelVersion.V1_5 ? 65535 : 1000),
       temperature = 0,
       top_p = 0.7,
+      provider: providerHint,
+      useResponsesApi: _useResponsesApi,
+      tools: _tools,
+      defaultHeaders,
       ...restOptions
     } = this.modelConfig;
 
-    const openai = new OpenAI({
+    const xiaomiDetected =
+      providerHint === 'xiaomi' || isXiaomiProvider(baseURL ?? undefined);
+
+    if (xiaomiDetected && this.modelConfig.useResponsesApi) {
+      logger.warn(
+        '[UITarsModel] Xiaomi MiMo does not support Responses API; falling back to Chat Completions.',
+      );
+    }
+
+    const clientOptions = {
       ...restOptions,
       maxRetries: 0,
-      baseURL,
-      apiKey,
-    });
+      defaultHeaders,
+    };
+    const openaiOptions: ClientOptions = xiaomiDetected
+      ? buildXiaomiClientOptions(apiKey ?? '', baseURL ?? '', clientOptions)
+      : { ...clientOptions, baseURL, apiKey };
+
+    const openai = new OpenAI(openaiOptions);
 
     const createCompletionPrams: ChatCompletionCreateParamsNonStreaming = {
       model,
       messages,
       stream: false,
-      seed: null,
-      stop: null,
-      frequency_penalty: null,
-      presence_penalty: null,
+      ...(xiaomiDetected
+        ? {}
+        : {
+            seed: null,
+            stop: null,
+            frequency_penalty: null,
+            presence_penalty: null,
+          }),
       // custom options
-      max_tokens,
+      ...(xiaomiDetected
+        ? { max_completion_tokens: max_tokens }
+        : { max_tokens }),
       temperature,
       top_p,
     };
@@ -145,7 +176,7 @@ export class UITarsModel extends Model {
 
     const startTime = Date.now();
 
-    if (this.modelConfig.useResponsesApi) {
+    if (this.modelConfig.useResponsesApi && !xiaomiDetected) {
       const lastAssistantIndex = messages.findLastIndex(
         (c) => c.role === 'assistant',
       );

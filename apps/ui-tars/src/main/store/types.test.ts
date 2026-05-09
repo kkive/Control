@@ -12,6 +12,7 @@ describe('VLMProviderV2', () => {
       [VLMProviderV2.ui_tars_1_5, 'Hugging Face Vision 1.5'],
       [VLMProviderV2.doubao_1_5, 'Doubao'],
       [VLMProviderV2.doubao_1_5_vl, 'VolcEngine Ark Vision Pro'],
+      [VLMProviderV2.xiaomi_mimo, 'Xiaomi MiMo'],
     ];
 
     cases.forEach(([provider, expected]) => {
@@ -22,8 +23,12 @@ describe('VLMProviderV2', () => {
     expect(VLMProviderV2.doubao_1_5).toBe('Doubao');
   });
 
-  it('should contain exactly four providers', () => {
+  it('should have correct value for Xiaomi MiMo provider', () => {
+    expect(VLMProviderV2.xiaomi_mimo).toBe('Xiaomi MiMo');
+  });
+
+  it('should contain exactly five providers', () => {
     const providerCount = Object.keys(VLMProviderV2).length;
-    expect(providerCount).toBe(4);
+    expect(providerCount).toBe(5);
   });
 });

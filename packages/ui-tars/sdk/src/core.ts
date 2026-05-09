@@ -18,3 +18,11 @@ export {
   convertToOpenAIMessages,
 } from './utils';
 export { StatusEnum } from '@ui-tars/shared/types';
+export {
+  XIAOMI_MIMO_BASE_URL,
+  XIAOMI_MIMO_DEFAULT_MODEL,
+  isXiaomiProvider,
+  isXiaomiTokenPlanProvider,
+  normalizeBaseURL,
+  buildXiaomiClientOptions,
+} from './providers';

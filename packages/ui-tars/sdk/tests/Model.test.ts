@@ -5,23 +5,29 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { UITarsModel } from '../src/Model';
 
+// Capture the OpenAI constructor args
+let lastOpenAIArgs: Record<string, unknown> = {};
+
 // Mock OpenAI
 const mockCreate = vi.fn();
 const mockResponsesCreate = vi.fn();
 const mockResponsesDelete = vi.fn();
 
 vi.mock('openai', () => ({
-  default: vi.fn().mockImplementation(() => ({
-    chat: {
-      completions: {
-        create: mockCreate,
+  default: vi.fn().mockImplementation((opts: Record<string, unknown>) => {
+    lastOpenAIArgs = opts;
+    return {
+      chat: {
+        completions: {
+          create: mockCreate,
+        },
       },
-    },
-    responses: {
-      create: mockResponsesCreate,
-      delete: mockResponsesDelete,
-    },
-  })),
+      responses: {
+        create: mockResponsesCreate,
+        delete: mockResponsesDelete,
+      },
+    };
+  }),
 }));
 
 // Mock context
@@ -1009,6 +1015,233 @@ describe('UITarsModel', () => {
         expect.any(Object),
       );
       expect(mockResponsesCreate).toHaveBeenCalledTimes(7);
+    });
+  });
+
+  describe('Xiaomi MiMo provider', () => {
+    beforeEach(() => {
+      lastOpenAIArgs = {};
+    });
+
+    it('should use api-key header and null Authorization for Xiaomi', async () => {
+      const model = new UITarsModel({
+        apiKey: 'mimo-secret-key',
+        baseURL: 'https://api.xiaomimimo.com/v1',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'test response' } }],
+        usage: { total_tokens: 100 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hello' }],
+        images: [],
+        screenContext: { width: 1920, height: 1080 },
+      });
+
+      expect(lastOpenAIArgs.apiKey).toBe('mimo-secret-key');
+      expect(lastOpenAIArgs.baseURL).toBe('https://api.xiaomimimo.com/v1');
+      const headers = lastOpenAIArgs.defaultHeaders as Record<string, string>;
+      expect(headers['api-key']).toBe('mimo-secret-key');
+      expect(headers['Authorization']).toBeNull();
+    });
+
+    it('should use standard Bearer auth for Xiaomi Token Plan endpoints', async () => {
+      const model = new UITarsModel({
+        apiKey: 'tp-mimo-secret-key',
+        baseURL: 'https://token-plan-cn.xiaomimimo.com/v1',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'test response' } }],
+        usage: { total_tokens: 100 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hello' }],
+        images: [],
+        screenContext: { width: 1920, height: 1080 },
+      });
+
+      expect(lastOpenAIArgs.apiKey).toBe('tp-mimo-secret-key');
+      expect(lastOpenAIArgs.baseURL).toBe(
+        'https://token-plan-cn.xiaomimimo.com/v1',
+      );
+      const headers = (lastOpenAIArgs.defaultHeaders ?? {}) as Record<
+        string,
+        string | null
+      >;
+      expect(headers['api-key']).toBeUndefined();
+      expect(headers['Authorization']).toBeUndefined();
+    });
+
+    it('should normalize baseURL by stripping trailing /chat/completions', async () => {
+      const model = new UITarsModel({
+        apiKey: 'key',
+        baseURL: 'https://api.xiaomimimo.com/v1/chat/completions',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'ok' } }],
+        usage: { total_tokens: 10 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hi' }],
+        images: [],
+        screenContext: { width: 800, height: 600 },
+      });
+
+      expect(lastOpenAIArgs.baseURL).toBe('https://api.xiaomimimo.com/v1');
+    });
+
+    it('should normalize Token Plan full chat completions URL', async () => {
+      const model = new UITarsModel({
+        apiKey: 'tp-key',
+        baseURL: 'https://token-plan-cn.xiaomimimo.com/v1/chat/completions',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'ok' } }],
+        usage: { total_tokens: 10 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hi' }],
+        images: [],
+        screenContext: { width: 800, height: 600 },
+      });
+
+      expect(lastOpenAIArgs.baseURL).toBe(
+        'https://token-plan-cn.xiaomimimo.com/v1',
+      );
+    });
+
+    it('should auto-detect Xiaomi by baseURL hostname', async () => {
+      const model = new UITarsModel({
+        apiKey: 'key',
+        baseURL: 'https://api.xiaomimimo.com/v1',
+        model: 'mimo-v2.5',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'ok' } }],
+        usage: { total_tokens: 10 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hi' }],
+        images: [],
+        screenContext: { width: 800, height: 600 },
+      });
+
+      const headers = lastOpenAIArgs.defaultHeaders as Record<string, string>;
+      expect(headers['api-key']).toBe('key');
+    });
+
+    it('should use max_completion_tokens instead of max_tokens for Xiaomi', async () => {
+      const model = new UITarsModel({
+        apiKey: 'key',
+        baseURL: 'https://token-plan-cn.xiaomimimo.com/v1',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'ok' } }],
+        usage: { total_tokens: 10 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hi' }],
+        images: [],
+        screenContext: { width: 800, height: 600 },
+      });
+
+      expect(mockCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          max_completion_tokens: 1000,
+        }),
+        expect.any(Object),
+      );
+      // max_tokens should NOT be present
+      const callArgs = mockCreate.mock.calls[0][0];
+      expect(callArgs.max_tokens).toBeUndefined();
+      expect(callArgs.seed).toBeUndefined();
+      expect(callArgs.stop).toBeUndefined();
+      expect(callArgs.frequency_penalty).toBeUndefined();
+      expect(callArgs.presence_penalty).toBeUndefined();
+    });
+
+    it('should preserve image_url content format for Xiaomi', async () => {
+      const model = new UITarsModel({
+        apiKey: 'key',
+        baseURL: 'https://api.xiaomimimo.com/v1',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'ok' } }],
+        usage: { total_tokens: 10 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: '<image>' }],
+        images: ['base64imagedata'],
+        screenContext: { width: 800, height: 600 },
+      });
+
+      expect(mockCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: [
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'image_url',
+                  image_url: { url: 'data:image/png;base64,base64imagedata' },
+                },
+              ],
+            },
+          ],
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('should fall back to Chat Completions when useResponsesApi is true for Xiaomi', async () => {
+      const model = new UITarsModel({
+        apiKey: 'key',
+        baseURL: 'https://api.xiaomimimo.com/v1',
+        model: 'mimo-v2.5',
+        provider: 'xiaomi',
+        useResponsesApi: true,
+      });
+
+      mockCreate.mockResolvedValue({
+        choices: [{ message: { content: 'ok' } }],
+        usage: { total_tokens: 10 },
+      });
+
+      await model.invoke({
+        conversations: [{ from: 'human', value: 'hi' }],
+        images: [],
+        screenContext: { width: 800, height: 600 },
+      });
+
+      // Should use chat completions, not responses
+      expect(mockCreate).toHaveBeenCalled();
+      expect(mockResponsesCreate).not.toHaveBeenCalled();
     });
   });
 });

@@ -28,7 +28,7 @@ import { cn } from '@renderer/utils';
 import { PresetImport, PresetBanner } from './preset';
 import { api } from '@/renderer/src/api';
 
-const FIXED_VLM_PROVIDER = VLMProviderV2.doubao_1_5;
+const FIXED_VLM_PROVIDER = VLMProviderV2.xiaomi_mimo;
 
 const formSchema = z.object({
   vlmProvider: z.literal(FIXED_VLM_PROVIDER),

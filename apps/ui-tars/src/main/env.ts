@@ -21,6 +21,8 @@ export const vlmProvider = process.env.VLM_PROVIDER;
 export const vlmBaseUrl = process.env.VLM_BASE_URL;
 export const vlmApiKey = process.env.VLM_API_KEY;
 export const vlmModelName = process.env.VLM_MODEL_NAME;
+export const mimoApiKey = process.env.MIMO_API_KEY;
+export const xiaomiApiKey = process.env.XIAOMI_API_KEY;
 
 const { platform } = process;
 export const isMacOS = platform === 'darwin';

@@ -47,6 +47,7 @@ export enum VLMProviderV2 {
   ui_tars_1_5 = 'Hugging Face Vision 1.5',
   doubao_1_5 = 'Doubao',
   doubao_1_5_vl = 'VolcEngine Ark Vision Pro',
+  xiaomi_mimo = 'Xiaomi MiMo',
 }
 
 export enum SearchEngineForSettings {

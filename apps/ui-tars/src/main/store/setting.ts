@@ -19,16 +19,17 @@ import {
 import { validatePreset } from './validate';
 import { BrowserWindow } from 'electron';
 
-const FIXED_VLM_PROVIDER = VLMProviderV2.doubao_1_5;
+const FIXED_VLM_PROVIDER = VLMProviderV2.xiaomi_mimo;
+const LEGACY_XIAOMI_API_BASE_URL = 'https://api.xiaomimimo.com/v1';
+const TOKEN_PLAN_XIAOMI_API_BASE_URL =
+  'https://token-plan-cn.xiaomimimo.com/v1';
 
 export const DEFAULT_SETTING: LocalStore = {
   language: 'en',
   vlmProvider: FIXED_VLM_PROVIDER,
-  // Reserved for future provider selection restore:
-  // vlmProvider: (env.vlmProvider as VLMProviderV2) || '',
-  vlmBaseUrl: env.vlmBaseUrl || '',
-  vlmApiKey: env.vlmApiKey || '',
-  vlmModelName: env.vlmModelName || '',
+  vlmBaseUrl: env.vlmBaseUrl || TOKEN_PLAN_XIAOMI_API_BASE_URL,
+  vlmApiKey: env.vlmApiKey || env.mimoApiKey || env.xiaomiApiKey || '',
+  vlmModelName: env.vlmModelName || 'mimo-v2.5',
   useResponsesApi: false,
   maxLoopCount: 100,
   loopIntervalInMs: 1000,
@@ -99,11 +100,23 @@ export class SettingStore {
 
   public static getStore(): LocalStore {
     const store = SettingStore.getInstance().store;
-    if (store.vlmProvider !== FIXED_VLM_PROVIDER) {
-      SettingStore.getInstance().set('vlmProvider', FIXED_VLM_PROVIDER);
-      return {
+    const shouldUseTokenPlanDefault =
+      store.vlmBaseUrl === LEGACY_XIAOMI_API_BASE_URL &&
+      (!store.vlmApiKey || store.vlmApiKey.startsWith('tp-'));
+    if (
+      store.vlmProvider !== FIXED_VLM_PROVIDER ||
+      shouldUseTokenPlanDefault
+    ) {
+      const nextStore = {
         ...store,
         vlmProvider: FIXED_VLM_PROVIDER,
+        vlmBaseUrl: shouldUseTokenPlanDefault
+          ? TOKEN_PLAN_XIAOMI_API_BASE_URL
+          : store.vlmBaseUrl,
+      };
+      SettingStore.getInstance().set(nextStore);
+      return {
+        ...nextStore,
       };
     }
     return store;
